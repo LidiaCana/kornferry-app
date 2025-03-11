@@ -10,6 +10,10 @@ appPackage/build
 # dependencies
 /node_modules
 /add-in/node_modules
+/tab/node_modules
+/package-lock.json
+.vscode/
+/add-in/
 
 # testing
 /coverage
