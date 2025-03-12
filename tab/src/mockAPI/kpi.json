@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "Sales Performance",
+    "kpi": "Revenue",
+    "group": "Marketing",
+    "url": "https://example.com/sales",
+    "actual": "120000 YTD",
+    "goal": "150000"
+  },
+  {
+    "id": 2,
+    "name": "Customer Satisfaction",
+    "kpi": "CSAT Score",
+    "group": "Customer Service",
+    "url": "https://example.com/cs",
+    "actual": "85",
+    "goal": "90"
+  },
+  {
+    "id": 3,
+    "name": "Website Traffic",
+    "kpi": "Sessions",
+    "group": "Digital Marketing",
+    "url": "https://example.com/traffic",
+    "actual": "50000",
+    "goal": "60000"
+  },
+  {
+    "id": 4,
+    "name": "Lead Generation",
+    "kpi": "Leads",
+    "group": "Sales",
+    "url": "https://example.com/leads",
+    "actual": "2000",
+    "goal": "2500"
+  },
+  {
+    "id": 5,
+    "name": "Employee Productivity",
+    "kpi": "Output",
+    "group": "HR",
+    "url": "https://example.com/productivity",
+    "actual": "75",
+    "goal": "80"
+  },
+  {
+    "id": 6,
+    "name": "Churn Rate",
+    "kpi": "Churn",
+    "group": "Customer Service",
+    "url": "https://example.com/churn",
+    "actual": "10",
+    "goal": "5"
+  },
+  {
+    "id": 7,
+    "name": "App Downloads",
+    "kpi": "Downloads",
+    "group": "Marketing",
+    "url": "https://example.com/downloads",
+    "actual": "30000",
+    "goal": "40000"
+  },
+  {
+    "id": 8,
+    "name": "Net Promoter Score",
+    "kpi": "NPS",
+    "group": "Customer Service",
+    "url": "https://example.com/nps",
+    "actual": "50",
+    "goal": "60"
+  }
+]

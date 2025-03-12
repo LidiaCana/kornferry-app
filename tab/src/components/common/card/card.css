@@ -1,0 +1,78 @@
+/* Style for the card container */
+.card-container {
+  display: flex;
+  flex-direction: column; /* Stack the title on top */
+  align-items: flex-start; /* Align all elements to the left */
+  padding: 20px; /* Padding around the card */
+  border: 1px solid #dcdcdc; /* Light border around the card */
+  border-radius: 8px; /* Rounded corners for the card */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: white; /* White background for the card */
+  max-width: 400px; /* Maximum width for the card */
+  margin: 10px 0; /* Space between cards */
+}
+
+/* Style for the title */
+.card-container h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px; /* Add some space below the title */
+}
+
+/* Style for the row that contains both widget and button */
+.row {
+  display: flex; /* Flexbox to align items horizontally */
+  justify-content: space-between; /* Space between widget and button */
+  width: 100%; /* Ensure it takes the full width */
+}
+
+/* Style for the widget container */
+.widget {
+  display: flex; /* Use flexbox for the widget */
+  flex-direction: column; /* Stack the actual and goal vertically */
+  gap: 8px; /* Space between the elements inside the widget */
+  flex-grow: 1; /* Allow widget to grow and fill available space */
+}
+
+/* Style for individual widget items */
+.widget p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.widget span {
+  font-size: 12px;
+  color: #888;
+  margin-left: 5px; /* Space between the value and the label */
+}
+
+/* Style for the button (anchor tag) */
+.card-container .button {
+  padding: 10px 15px;
+  background-color: #0078d4; /* Fluent UI blue background */
+  color: white; /* White text color */
+  text-decoration: none; /* Remove underline */
+  font-size: 14px;
+  border-radius: 5px; /* Rounded corners for the button */
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.card-container .button:hover {
+  background-color: #005a8a; /* Darker blue on hover */
+}
+
+.card-container .button:focus {
+  outline: none; /* Remove focus outline */
+}
+.widget .red {
+  color: red;
+  font-size: large;
+}
+.widget .green {
+  color: green;
+}

@@ -1,0 +1,50 @@
+/* /src/components/FilterSearchComponent.css */
+
+.filter-container {
+  padding: 20px;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  justify-content: space-between;
+  display: flex;
+  gap: 20px;
+}
+/* Style for the select elements */
+select {
+  padding: 8px 12px;
+  border: 1px solid #d3d3d3; /* Grey border */
+  border-bottom: 1px solid #000;
+  border-radius: 8px; /* Rounded corners */
+  background-color: #ffffff; /* Light background */
+  font-size: 14px;
+  color: #333; /* Dark text color */
+  transition: border-color 0.3s ease; /* Smooth transition on focus */
+}
+
+select:focus {
+  border-color: #0078d4; /* Highlight border on focus with blue */
+  outline: none; /* Remove default focus outline */
+}
+
+/* Style for the button */
+button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #0078d4; /* Fluent UI blue background */
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-bottom: 3px solid black; /* Black bottom border */
+  border-radius: 5px; /* Slight rounded corners for the button */
+}
+
+button:hover {
+  background-color: #005a8a; /* Darker blue on hover */
+}
+
+button:focus {
+  outline: none; /* Remove default focus outline */
+}
