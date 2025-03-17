@@ -4,7 +4,7 @@
     "name": "Sales Performance",
     "kpi": "Revenue",
     "group": "Marketing",
-    "url": "https://example.com/sales",
+    "url": "https://korn-ferry.us10.sapanalytics.cloud/sap/fpa/ui/tenants/2cb23/bo/story/4BC81783DF55A631F3A3B87155336623",
     "actual": "120000 YTD",
     "goal": "150000"
   },
@@ -13,7 +13,7 @@
     "name": "Customer Satisfaction",
     "kpi": "CSAT Score",
     "group": "Customer Service",
-    "url": "https://example.com/cs",
+    "url": "https://app.powerbi.com/links/pndjIwekF0?ctid=e9d21387-43f1-4e06-a253-f9ed9096dc48&pbi_source=linkShare",
     "actual": "85",
     "goal": "90"
   },
