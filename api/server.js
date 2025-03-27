@@ -58,10 +58,13 @@ async function fetchData(filterType, value) {
 app.get("/fetch-data", async (req, res) => {
   try {
     const { filterType, value } = req.query;
-    if (!filterType || !value) {
-      return res.status(400).json({ error: "Missing filterType or value parameters" });
+    let data;
+    if (!filterType && !value) {
+      data = await fetchData();
+    } else {
+      data = await fetchData(filterType, value);
     }
-    const data = await fetchData(filterType, value);
+
     res.json(data);
   } catch (error) {
     console.error("Error in /fetch-data route:", error);

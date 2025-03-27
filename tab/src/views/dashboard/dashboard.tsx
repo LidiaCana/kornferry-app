@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/common/layout";
 import {
-  Button,
-  PresenceBadgeStatus,
   Avatar,
   DataGridBody,
   DataGridRow,
@@ -13,23 +11,11 @@ import {
   TableCellLayout,
   TableColumnDefinition,
   createTableColumn,
+  Spinner
 } from "@fluentui/react-components";
 import FilterBar from "../../components/common/filterBar";
-// import data from "../../mockAPI/kpi.json";
-// import Card from "../../components/common/card";
-import {
-  FolderRegular,
-  EditRegular,
-  OpenRegular,
-  DocumentRegular,
-  PeopleRegular,
-  DocumentPdfRegular,
-  VideoRegular,
-} from "@fluentui/react-icons";
-import "./dashboard.css";
 import axios, { AxiosResponse } from "axios";
-
-// Data type for the DataGrid
+import { FilterType } from "../../components/common/filterBar/enum";
 
 type Item = {
   name: string;
@@ -41,58 +27,37 @@ type Item = {
 const columns: TableColumnDefinition<Item>[] = [
   createTableColumn<Item>({
     columnId: "name",
-    compare: (a, b) => {
-      return a.name.localeCompare(b.name);
-    },
-    renderHeaderCell: () => {
-      return "Name";
-    },
-    renderCell: (item) => {
-      return (
-        <TableCellLayout
-          media={<Avatar aria-label={item.name} name={item.name} />}
-        >
-          {item.name}
-        </TableCellLayout>
-      );
-    },
+    compare: (a, b) => a.name.localeCompare(b.name),
+    renderHeaderCell: () => "Name",
+    renderCell: (item) => (
+      <TableCellLayout media={<Avatar aria-label={item.name} name={item.name} />}>
+        {item.name}
+      </TableCellLayout>
+    ),
   }),
   createTableColumn<Item>({
     columnId: "title",
-    renderHeaderCell: () => {
-      return "Title";
-    },
-
-    renderCell: (item) => {
-      return item.title;
-    },
+    renderHeaderCell: () => "Title",
+    renderCell: (item) => item.title,
   }),
   createTableColumn<Item>({
     columnId: "department",
-    renderHeaderCell: () => {
-      return "Department";
-    },
-    renderCell: (item) => {
-      return <TableCellLayout>{item.department}</TableCellLayout>;
-    },
+    renderHeaderCell: () => "Department",
+    renderCell: (item) => <TableCellLayout>{item.department}</TableCellLayout>,
   }),
   createTableColumn<Item>({
     columnId: "details",
-    renderHeaderCell: () => {
-      return "Details";
-    },
-    renderCell: (item) => {
-      return (
-        <TableCellLayout>
-          <a href={item.details} target="_blank">
-            View
-          </a>
-        </TableCellLayout>
-      );
-    },
+    renderHeaderCell: () => "Details",
+    renderCell: (item) => (
+      <TableCellLayout>
+        <a href={item.details} target="_blank" rel="noopener noreferrer">
+          View
+        </a>
+      </TableCellLayout>
+    ),
   }),
 ];
-// Define types for employee data
+
 interface Employee {
   FirstName: string;
   LastName: string;
@@ -100,7 +65,6 @@ interface Employee {
   DepartmentName: string;
 }
 
-// Define types for the API response
 interface ApiResponse {
   data: {
     dimemployees: {
@@ -108,93 +72,71 @@ interface ApiResponse {
     };
   };
 }
-
-const endpoint = {
-  getEmployee: "http://localhost:3000/fetch-data",
-};
+// filterType=DepartmentName&value=Engineering
+const endpoint = (filterType?: string, value?: string) => `http://localhost:3000/fetch-data${filterType && value ? `?filterType=${filterType}&value=${value}` : ""}`;
 
 const Dashboard = () => {
-  const [employees, setEmployees] = useState<Item[]>([]); // State to store employee data
-  // const [items, setItems] = useState<Employee[]>([]); // Optional state for handling items to render
-  const defaultSelectedItems = React.useMemo(() => new Set([1]), []);
-  // Fetch data from API
-  const getData = async () => {
-    try {
-      const response: AxiosResponse<ApiResponse> = await axios.get(
-        endpoint.getEmployee
-      );
+  const [employees, setEmployees] = useState<Item[]>([]);
 
-      const employeeData = response.data.data.dimemployees.items.map(
-        (employee) => {
-          return {
-            name: employee.FirstName + " " + employee.LastName,
-            title: employee.Title,
-            department: employee.DepartmentName,
-            details:
-              "https://app.powerbi.com/groups/me/reports/88ad8f7e-4a26-4428-b99c-11a3738968b5/0d38b4cda58c695e796c?ctid=e9d21387-43f1-4e06-a253-f9ed9096dc48&experience=power-bi",
-          };
-        }
-      ); // Extract employee data
-      setEmployees(employeeData); // Update state with employee data
+  const getData = async (filterType?: string, value?: string) => {
+    try {
+      const response: AxiosResponse<ApiResponse> = await axios.get(endpoint(filterType, value));
+      const employeeData = response.data.data.dimemployees.items.map((employee) => ({
+        name: `${employee.FirstName} ${employee.LastName}`,
+        title: employee.Title,
+        department: employee.DepartmentName,
+        details: "https://app.powerbi.com/groups/me/reports/88ad8f7e-4a26-4428-b99c-11a3738968b5/0d38b4cda58c695e796c?ctid=e9d21387-43f1-4e06-a253-f9ed9096dc48&experience=power-bi",
+      }));
+      setEmployees(employeeData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
+  const handleOnSearch = (value: any) => {
+    getData(value);
+  };
+
+  const handleOnFilter = ({ filterType, value }: any) => {
+
+    getData(filterType, value);
+  };
+
   useEffect(() => {
-    // getData(); // Fetch data when the component mounts
-  }, []); // Empty dependency array ensures this runs only once
+    // getData();
+  }, []);
 
   return (
     <Layout>
-      <FilterBar
-        onSearch={(x) => console.log(x)}
-        onFilterChange={(y) => console.log(y)}
-      />
-      <Button
-        onClick={() => {
-          getData();
-        }}
-      >
-        Get Data
-      </Button>
+      <FilterBar onSearch={handleOnSearch} onFilterChange={handleOnFilter} />
+      {/* <Button onClick={() => getData()}>Get Data</Button> */}
+
+      {employees.length == 0 && <Spinner label="Seriously, still loading..." labelPosition="above" />}
       <DataGrid
         items={employees}
         columns={columns}
         selectionMode="single"
-        defaultSelectedItems={defaultSelectedItems}
         style={{ minWidth: "550px" }}
       >
         <DataGridHeader>
           <DataGridRow>
-            {({ renderHeaderCell }) => (
-              <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>
-            )}
+            {({ renderHeaderCell }) => <DataGridHeaderCell>{renderHeaderCell()}</DataGridHeaderCell>}
           </DataGridRow>
         </DataGridHeader>
         <DataGridBody<Item>>
           {({ item, rowId }) => (
-            <DataGridRow<Item>
-              key={rowId}
-              selectionCell={{ radioIndicator: { "aria-label": "Select row" } }}
-            >
-              {({ renderCell }) => (
-                <DataGridCell>{renderCell(item)}</DataGridCell>
-              )}
+            <DataGridRow<Item> key={rowId}>
+              {({ renderCell }) => <DataGridCell>{renderCell(item)}</DataGridCell>}
             </DataGridRow>
           )}
         </DataGridBody>
       </DataGrid>
-      {/* <div className="card-container-wrapper">
-        {items.map(({ FirstName, Phone, EmailAddress }, index) => (
-          <Card key={index} title={FirstName} url={EmailAddress} goal={Phone} />
-        ))}
-      </div> */}
     </Layout>
   );
 };
 
 export default Dashboard;
+
 
 {
   /* <div className="card-container-wrapper">

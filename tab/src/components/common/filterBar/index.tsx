@@ -6,72 +6,72 @@ import {
   SearchBoxChangeEvent,
   InputOnChangeData,
 } from "@fluentui/react-components";
+import { Department, FilterType, Title } from "./enum";
 
 interface FilterBarProps {
   onSearch:
-    | ((event: SearchBoxChangeEvent, data: InputOnChangeData) => void)
-    | undefined;
-  onFilterChange: (filterType: number, value: string) => void;
+  | ((event: SearchBoxChangeEvent, data: InputOnChangeData) => void)
+  | undefined;
+  onFilterChange: ({ filterType, value }: { filterType: FilterType, value: string }) => void;
 }
 
 const Filters = [
   {
-    id: 1,
-    label: "KPI",
-    values: [
-      { key: 1, text: "sales" },
-      { key: 2, text: "pipeline" },
-      { key: 3, text: "utilization" },
-    ],
+    id: FilterType.DEPARTMENT,
+    label: "department",
+    values: Object.entries(Department).filter(([key]) => isNaN(Number(key))).map(([key, value]) => ({
+      key: value as number,
+      text: key.replace(/([A-Z])/g, ' $1').trim(),
+    })),
   },
   {
-    id: 2,
-    label: "Group",
-    values: [
-      { key: 1, text: "IPD" },
-      { key: 2, text: "Global Account leader" },
-    ],
+    id: FilterType.TITLE,
+    label: "title",
+    values: Object.entries(Title).filter(([key]) => isNaN(Number(key))).map(([key, value]) => ({
+      key: value as number,
+      text: key.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim(),
+    })),
   },
 ];
 
 const FilterBar: React.FC<FilterBarProps> = ({ onSearch, onFilterChange }) => {
-  const [filter, setFilter] = useState<{ type: number; value: string }>({
-    type: 1,
+  const [filter, setFilter] = useState<{ type: FilterType; value: string }>({
+    type: FilterType.DEPARTMENT,
     value: "",
   });
 
   // Handler to update the filter state when a selection is made
-  const handleKPIChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleFilter1Change = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
+
     setFilter({ type: Filters[0].id, value: selectedValue });
   };
 
-  const handleGroupChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleFilter2Change = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
     setFilter({ type: Filters[1].id, value: selectedValue });
   };
 
   const handleFilterClick = () => {
     // Your logic to apply filters with filter type and value
-    onFilterChange(filter.type, filter.value);
+    console.log(`this is the filter: ${filter.type}`)
+    onFilterChange({ filterType: filter.type, value: filter.value });
   };
 
   return (
     <div className="filter-container">
       <SearchBox onChange={onSearch} />
-      {/* KPI Filter (using HTML select) */}
-      <select onChange={handleKPIChange} value={filter.value}>
-        <option value="">Select a KPI</option>
+
+      <select onChange={handleFilter1Change} value={filter.value}>
+        <option value="">Select a department</option>
         {Filters[0].values.map(({ key, text }) => (
           <option key={key} value={text}>
             {text}
           </option>
         ))}
       </select>
-
-      {/* Group Filter (using HTML select) */}
-      <select onChange={handleGroupChange} value={filter.value}>
-        <option value="">Select a Group</option>
+      <select onChange={handleFilter2Change} value={filter.value}>
+        <option value="">Select a title</option>
         {Filters[1].values.map(({ key, text }) => (
           <option key={key} value={text}>
             {text}
