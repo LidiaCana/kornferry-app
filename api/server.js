@@ -1,20 +1,21 @@
-import express from "express"; // Use import instead of require
-import fetch from "node-fetch"; // Use import for node-fetch
-import { InteractiveBrowserCredential } from "@azure/identity"; // Import the Azure SDK
-import cors from "cors"; // Import cors
+import express from "express";
+import fetch from "node-fetch";
+import { InteractiveBrowserCredential } from "@azure/identity";
+import cors from "cors";
 
 const app = express();
-const port = 3000; // Choose your desired port
+const port = 3000;
 
 // Use CORS middleware to allow cross-origin requests
 app.use(cors());
+app.use(express.json()); // Allow JSON body parsing
 
-// Define your GraphQL endpoint and query
 const endpoint =
   "https://3d3ae5ab09b9489ab4eb7fb8674bcc65.z3d.graphql.fabric.microsoft.com/v1/workspaces/3d3ae5ab-09b9-489a-b4eb-7fb8674bcc65/graphqlapis/fbe764e6-6bb8-41a1-ac18-f90c7a58805f/graphql";
-const query = `
+
+const query = (filterType, value) => `
   query {
-    dimemployees(first: 5) { 
+    dimemployees(first: 10,filter:{${filterType}:{eq:"${value}"}}) { 
       items {
        FirstName
        LastName
@@ -24,32 +25,27 @@ const query = `
     } 
   }
 `;
-const variables = {};
 
 // Function to acquire the token and fetch data
-async function fetchData() {
+async function fetchData(filterType, value) {
   try {
-    // Acquire token using InteractiveBrowserCredential
+    console.log("Fetching data with filter3:", filterType, value);
     let app = new InteractiveBrowserCredential({});
     let tokenPromise = app.getToken(
       "https://analysis.windows.net/powerbi/api/user_impersonation"
     );
     let accessToken = await tokenPromise;
-
-    // Set up headers with the access token
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken.token}`,
     };
 
-    // Make the request to the GraphQL endpoint
     const response = await fetch(endpoint, {
       method: "POST",
       headers: headers,
-      body: JSON.stringify({ query, variables }),
+      body: JSON.stringify({ query: query(filterType, value) }),
     });
 
-    // Parse and return the response data
     const result = await response.json();
     return result;
   } catch (error) {
@@ -58,17 +54,18 @@ async function fetchData() {
   }
 }
 
-// Define an endpoint in the Express server to fetch data
+// Define an endpoint to accept queries via URL
 app.get("/fetch-data", async (req, res) => {
   try {
-    const data = await fetchData();
-
-    res.json(data); // Send data back as JSON response
+    const { filterType, value } = req.query;
+    if (!filterType || !value) {
+      return res.status(400).json({ error: "Missing filterType or value parameters" });
+    }
+    const data = await fetchData(filterType, value);
+    res.json(data);
   } catch (error) {
     console.error("Error in /fetch-data route:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to fetch data", details: error.message });
+    res.status(500).json({ error: "Failed to fetch data", details: error.message });
   }
 });
 
