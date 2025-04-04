@@ -1,15 +1,16 @@
 import React from "react";
 import "./layout.css";
+import { NavigationBar } from "../NavBar/NavigationBar";
 interface ContainerProps {
   children: React.ReactNode;
 }
 const Layout: React.FC<ContainerProps> = ({ children }) => {
   return (
     <div className="layout">
-      <header className="header">
-        <h1>KPI Dashboard</h1>
-      </header>
-      <main className="main-content">{children}</main>
+      <NavigationBar />
+      <div className="main-content">
+        <main className="">{children}</main>
+      </div>
       <footer className="footer">
         <p>Site design / logo © 2025 ION Analytics; </p>
       </footer>
