@@ -11,15 +11,21 @@ import { LogLevel } from "@azure/msal-browser";
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/configuration.md
  */
 
+const config = {
+  clientId: import.meta.env.VITE_CLIENT_ID, // Application (client) ID from the app registration
+  tenantId: import.meta.env.VITE_TENANT_ID, // Directory (tenant) ID from the app registration
+  graphqlEndpoint: import.meta.env.VITE_GRAPHQL_ENDPOINT, // GraphQL endpoint
+  redirectUri: import.meta.env.VITE_REDIRECT_URI || "http://localhost:53000/", // Redirect URI for your application
+};
 export const graphqlConfig = {
-  graphqlEndpoint: "",
+  graphqlEndpoint: config.graphqlEndpoint,
 };
 
 export const msalConfig = {
   auth: {
-    clientId: "",
-    authority: "",
-    redirectUri: "",
+    clientId: config.clientId,
+    authority: `https://login.microsoftonline.com/${config.tenantId}`, // This is a URL (e.g. https://login.microsoftonline.com/{your tenant ID})
+    redirectUri: config.redirectUri, // This is your redirect URI
   },
   cache: {
     cacheLocation: "sessionStorage", // This configures where your cache will be stored

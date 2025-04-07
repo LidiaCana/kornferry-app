@@ -1,6 +1,7 @@
 # TeamsFx files
 env/.env.*.user
 env/.env.local
+env/.env.dev
 
 .DS_Store
 .localConfigs
@@ -11,10 +12,12 @@ appPackage/build
 /node_modules
 /add-in/node_modules
 /tab/node_modules
+/tab/.env.dev
 /api/node_modules
 /package-lock.json
 .vscode/
 /add-in/
+
 
 # testing
 /coverage
