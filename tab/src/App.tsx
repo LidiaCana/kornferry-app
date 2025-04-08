@@ -9,36 +9,27 @@ import {
   MsalProvider,
 } from "@azure/msal-react";
 // import "./App.css";
-import Spinner from "react-bootstrap/Spinner";
+import { Spinner } from "@fluentui/react-components";
 import Layout from "./components/common/layout";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { Button } from "@fluentui/react-components";
 import Banner from "./components/common/banner/banner";
+import Dashboard1 from "./views/dashboard/dashboard1";
+import { GraphQLResponse } from "./type/graph";
+import Dashboard2 from "./views/dashboard/dashboard2";
 
 /**
  * Renders information about the signed-in user or a button to retrieve data about the user
  */
-interface GraphQLResponse {
-  data: {
-    green_tripdata_2017s: {
-      items: {
-        trip_type: string;
-        total_amount: string;
-        payment_type: string;
-        tip_amount: string;
-        tolls_amount: string;
-        VendorID: string;
-      }[];
-    };
-  };
-}
+
 interface AppProps {
   instance: PublicClientApplication;
 }
+const username = "avier.cruzaguilar@ionrva.onmicrosoft.com";
 const ProfileContent = () => {
   const { instance, accounts } = useMsal();
   const [graphqlData, setGraphqlData] = useState<GraphQLResponse | null>(null);
-  const [display, setDisplay] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   function RequestGraphQL() {
     // Silently acquires an access token which is then attached to a request for GraphQL data
@@ -48,14 +39,15 @@ const ProfileContent = () => {
         account: accounts[0],
       })
       .then((response) => {
-        callGraphQL(response.accessToken).then((result) =>
-          setGraphqlData(result)
-        );
+        callGraphQL(response.accessToken).then((result) => {
+          setGraphqlData(result);
+          setIsLoading(false);
+        });
       });
   }
 
   async function callGraphQL(accessToken: string): Promise<GraphQLResponse> {
-    setDisplay(true);
+    setIsLoading(true);
     const query = `  query {
      green_tripdata_2017s {
         items {
@@ -83,15 +75,25 @@ const ProfileContent = () => {
     return result;
   }
   useEffect(() => {
+    console.log(accounts[0].username);
     if (accounts.length > 0) {
-      RequestGraphQL();
+      // RequestGraphQL();
     }
   }, [accounts]);
 
   return (
     <>
-      <br />
-      {graphqlData && <ProfileData graphqlData={graphqlData} />}
+      {accounts[0].username === username ? (
+        <Dashboard2 items={[]} />
+      ) : (
+        <Dashboard1 items={[]} />
+      )}
+
+      {/* <br />
+      {isLoading && <Spinner label="Loading..." />}
+      {graphqlData && !isLoading && (
+        <Dashboard items={graphqlData.data.green_tripdata_2017s.items} />
+      )} */}
     </>
   );
 };
